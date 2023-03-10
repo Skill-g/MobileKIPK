@@ -1,2 +1,2 @@
 # KIPKmobile
-# KIPKmobile
+Тут будут выложены новые версии мобильного приложения "MobileKIPK"
