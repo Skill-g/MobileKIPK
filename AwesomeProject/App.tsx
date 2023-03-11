@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform, DrawerLayoutAndroid, TouchableOpacity, Modal, Alert, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Platform, TouchableOpacity, Modal, FlatList } from 'react-native';
 import PushNotification, { Importance } from 'react-native-push-notification';  
 
 PushNotification.createChannel(
