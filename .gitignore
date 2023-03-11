@@ -143,3 +143,24 @@ package-lock.json
 
 # Temporary files created by Metro to check the health of the file watcher
 .metro-health-check*
+.gitignore
+.vscode
+/assets
+/android
+/ios
+.bundle
+/amplifyPush
+.node-version
+.env
+tsconfig.json
+metro.config.js
+Gemfile
+babel.config.js
+app.json
+server.js
+index.js
+package-lock.json
+package.json
+my-upload-key.keystore
+.prettuerrc.js
+.eslintrc.js
