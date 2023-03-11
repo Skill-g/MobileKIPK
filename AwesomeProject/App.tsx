@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform, DrawerLayoutAndroid, TouchableOpacity, Modal, Alert } from 'react-native';
+import { View, Text, StyleSheet, Platform, DrawerLayoutAndroid, TouchableOpacity, Modal, Alert, FlatList } from 'react-native';
 import PushNotification, { Importance } from 'react-native-push-notification';  
 
 
@@ -93,6 +93,32 @@ const Timer = ({ start, end }) => {
   );
 };
 
+const MathSchedule = () => {
+  const mathClasses = [
+    { name: 'Математика', time: '8:00 - 9:30' },
+    { name: 'Математика', time: '9:40 - 11:10' },
+    { name: 'Математика', time: '11:20 - 12:50' },
+    { name: 'Математика', time: '13:30 - 15:00' },
+    { name: 'Математика', time: '15:10 - 16:40' },
+  ];
+
+  return (
+    <View>
+      <Text style={styles.mathTitle}>Расписание:</Text>
+      <FlatList
+        data={mathClasses}
+        renderItem={({ item }) => (
+          <View style={styles.mathItem}>
+            <Text style={styles.mathName}>{item.name}</Text>
+            <Text style={styles.mathTime}>{item.time}</Text>
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    </View>
+  );
+};
+
 const ScheduleScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -117,21 +143,20 @@ const ScheduleScreen = () => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+          
           setModalVisible(!modalVisible);
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>This is the modal window.</Text>
-
+            <MathSchedule />
             <TouchableOpacity
               style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
               onPress={() => {
                 setModalVisible(!modalVisible);
               }}
             >
-              <Text style={styles.textStyle}>Close</Text>
+              <Text style={styles.textStyle}>Закрыть</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -165,116 +190,136 @@ const times = [
   { start: '15:00', end: '16:20' },
 ];
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#F5FCFF',
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  timesContainer: {
+    alignItems: 'center',
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  time: {
+    fontSize: 16,
+    marginRight: 10,
+  },
+  timerContainer: {
+    borderWidth: 2,
+    borderRadius: 5,
+    padding: 5,
+  },
+  timer: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  tabButton: {
+    padding: 10,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  activeTabButton: {
+    backgroundColor: '#333',
+  },
+  tabButtonText: {
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  activeTabButtonText: {
+    color: '#fff',
+  },
+  navButton: {
+    paddingHorizontal: 10,
+  },
+  navButtonText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  navBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
+    height: 50,
+    paddingHorizontal: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    paddingTop: 10,
+  },
+  modalView: {
+    margin: 10,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
-    title: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      marginBottom: 20,
-    },
-    timesContainer: {
-      alignItems: 'center',
-    },
-    timeContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 10,
-    },
-    time: {
-      fontSize: 16,
-      marginRight: 10,
-    },
-    timerContainer: {
-      borderWidth: 2,
-      borderRadius: 5,
-      padding: 5,
-    },
-    timer: {
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    tabButton: {
-      padding: 10,
-      borderRadius: 5,
-      marginRight: 10,
-    },
-    activeTabButton: {
-      backgroundColor: '#333',
-    },
-    tabButtonText: {
-      color: '#333',
-      fontWeight: 'bold',
-    },
-    activeTabButtonText: {
-      color: '#fff',
-    },
-    navButton: {
-      paddingHorizontal: 10,
-    },
-    navButtonText: {
-      fontSize: 16,
-      color: '#333',
-    },
-    navBar: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      backgroundColor: '#fff',
-      height: 50,
-      paddingHorizontal: 10,
-      borderTopWidth: 1,
-      borderTopColor: '#ddd',
-      paddingTop: 10,
-    },
-    modalView: {
-      margin: 20,
-      backgroundColor: "white",
-      borderRadius: 20,
-      padding: 35,
-      alignItems: "center",
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-    },
-    openButton: {
-      backgroundColor: "#F194FF",
-      borderRadius: 20,
-      padding: 10,
-      elevation: 2,
-      marginTop: 20,
-    },
-    textStyle: {
-      color: "white",
-      fontWeight: "bold",
-      textAlign: "center",
-    },
-    modalText: {
-      marginBottom: 15,
-      textAlign: "center",
-    },
-    centeredView: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "rgba(0,0,0,0.5)",
-    },
-  });
-  
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    maxHeight: "80%",
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop: 20,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)"
+  },
+  mathTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 20,
+  },
+  mathItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  mathName: {
+    fontSize: 18,   
+    fontWeight: "bold",
+  },
+  mathTime: {
+    fontSize: 16,
+    marginLeft: 10,
+  },
+});
   export default ScheduleScreen ; NavigationBar;
-function createBottomTabNavigator() {
-  throw new Error('Function not implemented.');
-}
