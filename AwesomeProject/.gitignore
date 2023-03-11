@@ -1,4 +1,6 @@
-.*
+/
+.
+./
 node_modules
 launch.json
 !**/*.xcodeproj
@@ -146,11 +148,11 @@ package-lock.json
 .metro-health-check*
 .gitignore
 .vscode
-/assets
-/android
-/ios
+assets
+android
+ios
 .bundle
-/amplifyPush
+amplifyPush
 .node-version
 .env
 tsconfig.json
