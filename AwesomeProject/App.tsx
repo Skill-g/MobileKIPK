@@ -88,11 +88,30 @@ const Timer = ({ start, end }: TimerProps) => {
 
 const MathSchedule = ({ day }: { day: string }) => {
   const mathClasses = [
-    { day: 'monday', name: 'Математика', time: '8:00 - 9:30' },
-    { day: 'monday', name: 'Математика', time: '9:40 - 11:10' },
-    { day: 'tuesday', name: 'Математика', time: '11:20 - 12:50' },
-    { day: 'wednesday', name: 'Математика', time: '13:30 - 15:00' },
-    { day: 'friday', name: 'Математика', time: '15:10 - 16:40' },
+    { day: 'пн', name: '/Создание, обработка и настройка пакетов  прикладных программ', time: '' },
+    { day: 'пн', name: 'Навыки математики и естесственных наук', time: '' },
+    { day: 'пн', name: 'Коммуникации и взаимодействие', time: '' },
+    { day: 'пн', name: 'Информационная безопасность', time: '' },
+    { day: 'пн', name: 'Создание, обработка и настройка пакетов  прикладных программ/', time: '' },
+    { day: 'вт', name: '/Создание, обработка и настройка пакетов  прикладных программ ', time: '' },
+    { day: 'вт', name: 'Создание информационной справочной поддержки для  клиентов', time: '' },
+    { day: 'вт', name: 'Коммуникации и взаимодействи', time: '' },
+    { day: 'вт', name: 'Развитие и совершенствование физических качеств', time: '' },
+    { day: 'вт', name: 'Создание, обработка и настройка пакетов  прикладных программ/', time: '' },
+    { day: 'ср', name: '/Создание, обработка и настройка пакетов  прикладных программ', time: '' },
+    { day: 'ср', name: 'Развитие и совершенствование физических качеств', time: '' },
+    { day: 'ср', name: 'Информационная безопасность', time: '' },
+    { day: 'ср', name: 'Навыки математики и естесственных наук', time: '' },
+    { day: 'ср', name: 'Создание, обработка и настройка пакетов  прикладных программ/атика', time: '' },
+    { day: 'чт', name: '/Создание, обработка и настройка пакетов  прикладных программ ', time: '' },
+    { day: 'чт', name: 'Создание информационной справочной поддержки для  клиентов', time: '' },
+    { day: 'чт', name: 'Информационная безопасность', time: '' },
+    { day: 'чт', name: 'Создание, обработка и настройка пакетов  прикладных программ/', time: '' },
+    { day: 'пт', name: 'Пара отсутствует', time: '' },
+    { day: 'пт', name: '/Создание, обработка и настройка пакетов  прикладных программ', time: '' },
+    { day: 'пт', name: 'Развитие и совершенствование физических качеств', time: '' },
+    { day: 'пт', name: 'Навыки математики и естесственных наук', time: '' },
+    { day: 'пт', name: 'Создание, обработка и настройка пакетов  прикладных программ/ а', time: '' },
   ];
 
   const classesForDay = mathClasses.filter((item) => item.day.toLowerCase() === day.toLowerCase());
@@ -111,6 +130,29 @@ const MathSchedule = ({ day }: { day: string }) => {
         )}
         keyExtractor={(item, index) => index.toString()}
       />
+    </View>
+  );
+};
+type DaySelectorProps = {
+  selectedDay: string;
+  setSelectedDay: (day: string) => void;
+}
+
+const DaySelector = ({ selectedDay, setSelectedDay }: DaySelectorProps) => {
+  const daysOfWeek = ['пн', 'вт', 'ср', 'чт', 'пт'];
+  return (
+    <View style={styles.daySelector}>
+      {daysOfWeek.map(day => (
+        <TouchableOpacity
+          key={day}
+          style={[styles.dayButton, day === selectedDay && styles.selectedDayButton]}
+          onPress={() => setSelectedDay(day)}
+        >
+          <Text style={[styles.dayButtonText, day === selectedDay && styles.selectedDayButtonText]}>
+            {day}
+          </Text>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 };
@@ -141,27 +183,28 @@ const ScheduleScreen = () => {
         })}
       </View>
       <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
+  animationType="slide"
+  transparent={true}
+  visible={modalVisible}
+  onRequestClose={() => {
+    setModalVisible(!modalVisible);
+  }}
+>
+  <View style={styles.centeredView}>
+    <View style={styles.modalView}>
+      <DaySelector selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+      <MathSchedule day={selectedDay} />
+      <TouchableOpacity
+        style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+        onPress={() => {
           setModalVisible(!modalVisible);
         }}
       >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-          <MathSchedule day={selectedDay} />
-            <TouchableOpacity
-              style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
-            >
-              <Text style={styles.textStyle}>Закрыть</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+        <Text style={styles.textStyle}>Закрыть</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
     </View>
   );
 };
@@ -328,6 +371,29 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 20,
+  },
+  daySelector: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 20,
+  },
+  dayButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  selectedDayButton: {
+    backgroundColor: '#2196F3',
+    borderColor: '#2196F3',
+  },
+  dayButtonText: {
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  selectedDayButtonText: {
+    color: '#fff',
   },
 });
   export default ScheduleScreen ; NavigationBar;
