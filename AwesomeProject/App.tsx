@@ -86,20 +86,23 @@ const Timer = ({ start, end }: TimerProps) => {
   );
 };
 
-const MathSchedule = () => {
+const MathSchedule = ({ day }: { day: string }) => {
   const mathClasses = [
-    { name: 'Математика', time: '8:00 - 9:30' },
-    { name: 'Математика', time: '9:40 - 11:10' },
-    { name: 'Математика', time: '11:20 - 12:50' },
-    { name: 'Математика', time: '13:30 - 15:00' },
-    { name: 'Математика', time: '15:10 - 16:40' },
+    { day: 'monday', name: 'Математика', time: '8:00 - 9:30' },
+    { day: 'monday', name: 'Математика', time: '9:40 - 11:10' },
+    { day: 'tuesday', name: 'Математика', time: '11:20 - 12:50' },
+    { day: 'wednesday', name: 'Математика', time: '13:30 - 15:00' },
+    { day: 'friday', name: 'Математика', time: '15:10 - 16:40' },
   ];
 
+  const classesForDay = mathClasses.filter((item) => item.day.toLowerCase() === day.toLowerCase());
+
+
   return (
-    <View>
+    <View style={styles.mathSchedule}>
       <Text style={styles.mathTitle}>Расписание:</Text>
       <FlatList
-        data={mathClasses}
+        data={classesForDay}
         renderItem={({ item }) => (
           <View style={styles.mathItem}>
             <Text style={styles.mathName}>{item.name}</Text>
@@ -114,6 +117,12 @@ const MathSchedule = () => {
 
 const ScheduleScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedDay, setSelectedDay] = useState('');
+
+  useEffect(() => {
+    const dayOfWeek = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+    setSelectedDay(dayOfWeek.toLowerCase());
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -127,7 +136,7 @@ const ScheduleScreen = () => {
             <View style={styles.timeContainer} key={index}>
               <Text style={styles.time}>{startTime} - {endTime}</Text>
               <Timer start={startTime} end={endTime} />
-            </View>
+            </View> 
           );
         })}
       </View>
@@ -136,13 +145,12 @@ const ScheduleScreen = () => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          
           setModalVisible(!modalVisible);
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <MathSchedule />
+          <MathSchedule day={selectedDay} />
             <TouchableOpacity
               style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
               onPress={() => {
@@ -165,14 +173,8 @@ type NavigationBarProps = {
 const NavigationBar = ({ setModalVisible }: NavigationBarProps) => {
   return (
     <View style={styles.navBar}>
-      <TouchableOpacity style={styles.navButton}>
-        <Text style={styles.navButtonText}>Время</Text>
-      </TouchableOpacity>
       <TouchableOpacity style={styles.navButton} onPress={() => setModalVisible(true)}>
         <Text style={styles.navButtonText}>Расписание</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.navButton}>
-        <Text style={styles.navButtonText}>Настройки</Text>
       </TouchableOpacity>
     </View>
   );
@@ -241,6 +243,10 @@ const styles = StyleSheet.create({
   navButtonText: {
     fontSize: 16,
     color: '#333',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+
   },
   navBar: {
     position: 'absolute',
@@ -249,7 +255,7 @@ const styles = StyleSheet.create({
     right: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center', // <-- Add this line
     backgroundColor: '#fff',
     height: 50,
     paddingHorizontal: 10,
@@ -317,6 +323,11 @@ const styles = StyleSheet.create({
   mathTime: {
     fontSize: 16,
     marginLeft: 10,
+  },
+  mathSchedule: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
 });
   export default ScheduleScreen ; NavigationBar;
