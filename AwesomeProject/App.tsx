@@ -2,45 +2,54 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform, DrawerLayoutAndroid, TouchableOpacity, Modal, Alert, FlatList } from 'react-native';
 import PushNotification, { Importance } from 'react-native-push-notification';  
 
-
-
 PushNotification.createChannel(
   {
-    channelId: 'default-channel-id', 
+    channelId: 'default-channel-id',
     channelName: 'Default channel',
     channelDescription: 'A default channel for notifications',
     importance: Importance.HIGH,
     vibrate: true,
-    soundName: 'default', 
-    playSound: true, 
+    soundName: 'default',
+    playSound: true,
   },
   created => console.log(`createChannel returned '${created}'`)
 );
 
-PushNotification.configure({
-  onNotification: function(notification) {
-    console.log(notification);
-  },
-  popInitialNotification: true,
-  requestPermissions: Platform.OS === 'ios' ? true : false, 
-   permissions: {
-    alert: true,
-     badge: true,
-    sound: true,
-   },
-});
-const Timer = ({ start, end }) => {
-  const [timeDifference, setTimeDifference] = useState(calculateTimeDifference(start, end));
+interface TimerProps {
+  start: any;
+  end: any;
+}
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeDifference(calculateTimeDifference(start, end));
-    }, 1000);
+const Timer = ({ start, end }: TimerProps) => {
+    const [timeDifference, setTimeDifference] = useState(calculateTimeDifference(start, end));
+    const [notificationSent, setNotificationSent] = useState(false);
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const newTimeDifference = calculateTimeDifference(start, end);
+        setTimeDifference(newTimeDifference);
+
+        if (!notificationSent && newTimeDifference <= 600000 && newTimeDifference > 0) {
+          setNotificationSent(true);
+          if (Platform.OS === 'android') {
+            PushNotification.localNotification({
+              channelId: 'default-channel-id',
+              message: `До конца пары осталось ${Math.floor(newTimeDifference / (1000 * 60))} минут!`,
+              soundName: 'default',
+            });
+          } else {
+            PushNotification.localNotification({
+              message: `До конца пары осталось ${Math.floor(newTimeDifference / (1000 * 60))} минут!`,
+              soundName: 'default',
+            });
+          }
+        }
+      }, 1000);
 
     return () => {
       clearInterval(interval);
     };
-  }, [start, end]);
+  }, [start, end, notificationSent]); // added notificationSent to dependencies list
 
   function calculateTimeDifference(start: { split: (arg0: string) => [any, any]; }, end: { split: (arg0: string) => [any, any]; }) {
     const now = new Date();
@@ -50,29 +59,13 @@ const Timer = ({ start, end }) => {
     const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHours, endMinutes, 0, 0);
     const startDifference = startDate.getTime() - now.getTime();
     const endDifference = endDate.getTime() - now.getTime();
-    if (endDifference <= 0 && endDifference > -60000) {
-      if (Platform.OS === 'android') {
-        PushNotification.localNotification({
-          channelId: 'default-channel-id',
-          message: `Пара окончена!`,
-          soundName: 'default',
-        });
-      } else {
-        PushNotification.localNotification({
-          message: `Пара окончена!`,
-          soundName: 'default',
-        });
-      }
-    }
-    if (startDifference > 0) {
-      return startDifference;
-    } else if (endDifference > 0) {
+    const diffInMinutes = Math.floor(startDifference / (1000 * 60));
+    if (startDifference <= 0 && endDifference > 0) {
       return endDifference;
     } else {
       return 0;
     }
   }
-  
 
   function formatTime(timeDifference: number) {
     if (timeDifference <= 0) {
@@ -165,7 +158,11 @@ const ScheduleScreen = () => {
   );
 };
 
-const NavigationBar = ({ setModalVisible }) => {
+type NavigationBarProps = {
+  setModalVisible: (visible: boolean) => void;
+}
+
+const NavigationBar = ({ setModalVisible }: NavigationBarProps) => {
   return (
     <View style={styles.navBar}>
       <TouchableOpacity style={styles.navButton}>
