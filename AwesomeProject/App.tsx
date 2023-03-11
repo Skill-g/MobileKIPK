@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform, DrawerLayoutAndroid, TouchableOpacity } from 'react-native';
-import PushNotification, { Importance } from 'react-native-push-notification';
+import { View, Text, StyleSheet, Platform, DrawerLayoutAndroid, TouchableOpacity, Modal, Alert } from 'react-native';
+import PushNotification, { Importance } from 'react-native-push-notification';  
 
 
 
@@ -29,7 +29,6 @@ PushNotification.configure({
     sound: true,
    },
 });
-
 const Timer = ({ start, end }) => {
   const [timeDifference, setTimeDifference] = useState(calculateTimeDifference(start, end));
 
@@ -95,9 +94,11 @@ const Timer = ({ start, end }) => {
 };
 
 const ScheduleScreen = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <View style={styles.container}>
-      <NavigationBar />
+      <NavigationBar setModalVisible={setModalVisible} />
       <Text style={styles.title}>Время пар:</Text>
       <View style={styles.timesContainer}>
         {times.map((time, index) => {
@@ -111,17 +112,41 @@ const ScheduleScreen = () => {
           );
         })}
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>This is the modal window.</Text>
+
+            <TouchableOpacity
+              style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+              onPress={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <Text style={styles.textStyle}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
 
-const NavigationBar = () => {
+const NavigationBar = ({ setModalVisible }) => {
   return (
     <View style={styles.navBar}>
       <TouchableOpacity style={styles.navButton}>
         <Text style={styles.navButtonText}>Время</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.navButton}>
+      <TouchableOpacity style={styles.navButton} onPress={() => setModalVisible(true)}>
         <Text style={styles.navButtonText}>Расписание</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.navButton}>
@@ -210,10 +235,46 @@ const times = [
       borderTopColor: '#ddd',
       paddingTop: 10,
     },
+    modalView: {
+      margin: 20,
+      backgroundColor: "white",
+      borderRadius: 20,
+      padding: 35,
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+    openButton: {
+      backgroundColor: "#F194FF",
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2,
+      marginTop: 20,
+    },
+    textStyle: {
+      color: "white",
+      fontWeight: "bold",
+      textAlign: "center",
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: "center",
+    },
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(0,0,0,0.5)",
+    },
   });
   
   export default ScheduleScreen ; NavigationBar;
 function createBottomTabNavigator() {
   throw new Error('Function not implemented.');
 }
-
