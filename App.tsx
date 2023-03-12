@@ -6,28 +6,35 @@ import PushNotification, { Importance } from 'react-native-push-notification';
 const appVersion = '1.0';
 const latestVersionUrl = 'https://more.csretro.ru/version.txt';
 
-fetch(latestVersionUrl)
-  .then(response => response.text())
-  .then(version => {
-    if (version.trim() > appVersion.trim()) {
-      Alert.alert(
-        'Доступна новая версия',
-        'Хотите установить последнюю версию приложения?',
-        [
-          {
-            text: 'Да',
-            onPress: () => {
-              Linking.openURL('https://more.csretro.ru/KIPK.apk');
+function checkVersion() {
+  fetch(latestVersionUrl)
+    .then(response => response.text())
+    .then(version => {
+      if (version.trim() > appVersion.trim()) {
+        Alert.alert(
+          'Доступна новая версия',
+          'Хотите установить последнюю версию приложения?',
+          [
+            {
+              text: 'Да',
+              onPress: () => {
+                Linking.openURL('https://more.csretro.ru/KIPK.apk');
+              }
+            },
+            {
+              text: 'Нет',
+              style: 'cancel'
             }
-          },
-          {
-            text: 'Нет',
-            style: 'cancel'
-          }
-        ]
-      );
-    }
-  })
+          ]
+        );
+      }
+    })
+    .catch(error => console.log(error));
+}
+
+// Call checkVersion function when the app starts
+checkVersion();
+
 
 
 
