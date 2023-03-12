@@ -4,37 +4,34 @@ import PushNotification, { Importance } from 'react-native-push-notification';
 
 
 const appVersion = '1.0';
-const latestVersionUrl = 'https://more.csretro.ru/2.0.apk';
+const latestVersionUrl = 'https://more.csretro.ru/version.txt';
 
-if (latestVersionUrl.includes(appVersion)) {
-  Alert.alert(
-    'У вас последняя версия',
-    'Вы используете последнюю версию приложения.',
-    [
-      {
-        text: 'OK',
-        onPress: () => {}
-      }
-    ]
-  );
-} else {
-  Alert.alert(
-    'Доступна новая версия',
-    'Хотите установить последнюю версию приложения?',
-    [
-      {
-        text: 'Да',
-        onPress: () => {
-          Linking.openURL(latestVersionUrl);
-        }
-      },
-      {
-        text: 'Нет',
-        style: 'cancel'
-      }
-    ]
-  );
-}
+fetch(latestVersionUrl)
+  .then(response => response.text())
+  .then(version => {
+    if (version.trim() > appVersion.trim()) {
+      Alert.alert(
+        'Доступна новая версия',
+        'Хотите установить последнюю версию приложения?',
+        [
+          {
+            text: 'Да',
+            onPress: () => {
+              Linking.openURL('https://more.csretro.ru/KIPK.apk');
+            }
+          },
+          {
+            text: 'Нет',
+            style: 'cancel'
+          }
+        ]
+      );
+    }
+  })
+  .catch(error => {
+    console.error(error);
+  });
+
 
 
 
