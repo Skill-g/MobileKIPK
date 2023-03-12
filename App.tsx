@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform, TouchableOpacity, Modal, FlatList, Alert, Linking } from 'react-native';
 import PushNotification, { Importance } from 'react-native-push-notification';  
-import DeviceInfo from 'react-native-device-info';
+
 
 const appVersion = '1.0';
 const latestVersionUrl = 'https://more.csretro.ru/2.0.apk';
@@ -48,7 +48,7 @@ PushNotification.createChannel(
     soundName: 'default',
     playSound: true,
   },
-  created => console.log(`createChannel returned '${created}'`)
+  (  created: any) => console.log(`createChannel returned '${created}'`)
 );
 
 interface TimerProps {
