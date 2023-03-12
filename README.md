@@ -1,2 +1,3 @@
 # MobileKIPK
-Mobile application for kipk
+Мобильное приложение для KIPK
+ПР - 22 Сборка приложения
