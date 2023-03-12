@@ -28,9 +28,6 @@ fetch(latestVersionUrl)
       );
     }
   })
-  .catch(error => {
-    console.error(error);
-  });
 
 
 
