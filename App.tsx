@@ -1,39 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Platform, TouchableOpacity, Modal, FlatList, Alert, Linking } from 'react-native';
+import { View, Text, StyleSheet, Platform, TouchableOpacity, Modal, FlatList, Alert, Linking, AppState } from 'react-native';
 import PushNotification, { Importance } from 'react-native-push-notification';  
-
-const appVersion = '2.0';
-const latestVersionUrl = 'https://more.csretro.ru/version.txt';
-
-function checkVersion() {
-  fetch(latestVersionUrl)
-    .then(response => response.text())
-    .then(version => {
-      if (version.trim() > appVersion.trim()) {
-        Alert.alert(
-          'Доступна новая версия',
-          'Хотите установить последнюю версию приложения?',
-          [
-            {
-              text: 'Да',
-              onPress: () => {
-                Linking.openURL('https://more.csretro.ru/KIPK.apk');
-              }
-            },
-            {
-              text: 'Нет',
-              style: 'cancel'
-            }
-          ]
-        );
-      }
-    })
-    .catch(error => console.log(error));
-}
-
-// Call checkVersion function when the app starts
-checkVersion();
-
 
 PushNotification.createChannel(
   {
