@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Platform, TouchableOpacity, Modal, FlatList, Alert, Linking } from 'react-native';
 import PushNotification, { Importance } from 'react-native-push-notification';  
 
-
-const appVersion = '1.0';
+const appVersion = '2.0';
 const latestVersionUrl = 'https://more.csretro.ru/version.txt';
 
 function checkVersion() {
@@ -36,9 +35,6 @@ function checkVersion() {
 checkVersion();
 
 
-
-
-
 PushNotification.createChannel(
   {
     channelId: 'default-channel-id',
@@ -49,7 +45,7 @@ PushNotification.createChannel(
     soundName: 'default',
     playSound: true,
   },
-  (  created: any) => console.log(`createChannel returned '${created}'`)
+  created => console.log(`createChannel returned '${created}'`)
 );
 
 interface TimerProps {
@@ -96,8 +92,23 @@ const Timer = ({ start, end }: TimerProps) => {
     const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHours, endMinutes, 0, 0);
     const startDifference = startDate.getTime() - now.getTime();
     const endDifference = endDate.getTime() - now.getTime();
-    const diffInMinutes = Math.floor(startDifference / (1000 * 60));
-    if (startDifference <= 0 && endDifference > 0) {
+    if (endDifference <= 0 && endDifference > -60000) {
+      if (Platform.OS === 'android') {
+        PushNotification.localNotification({
+          channelId: 'default-channel-id',
+          message: `Пара окончена!`,
+          soundName: 'default',
+        });
+      } else {
+        PushNotification.localNotification({
+          message: `Пара окончена!`,
+          soundName: 'default',
+        });
+      }
+    }
+    if (startDifference > 0) {
+      return startDifference;
+    } else if (endDifference > 0) {
       return endDifference;
     } else {
       return 0;
